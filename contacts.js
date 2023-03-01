@@ -26,7 +26,7 @@ async function getContactById(id) {
 		const contacts = JSON.parse(result);
 		const contactById = contacts.find(contact => contact.id === id);
 
-		if (contactById === undefined) {
+		if (!contactById) {
 			return console.warn(`\x1B[31m Contact by id=${id} not found !`);
 		}
 
@@ -45,7 +45,7 @@ async function removeContact(id) {
 
 		const contactById = contacts.find(contact => contact.id === id);
 
-		if (contactById === undefined) {
+		if (!contactById) {
 			return console.warn(`\x1B[31m Unable to remove. Contact by id=${id} not found !`);
 		}
 
@@ -55,11 +55,10 @@ async function removeContact(id) {
 
 		await fs.writeFile(contactsPath, jsonContacts);
 
-		const readResult = await fs.readFile(contactsPath);
-		const contactsResult = JSON.parse(readResult);
-
-		console.table(contactsResult);
-	} catch (error) {}
+		console.table(filteredContact);
+	} catch (error) {
+		console.log(error.message);
+	}
 }
 
 // This function add contact to database file
@@ -74,12 +73,10 @@ async function addContact(name, email, phone) {
 
 		await fs.writeFile(contactsPath, jsonContacts);
 
-		const readResult = await fs.readFile(contactsPath);
-
-		const contactsResult = JSON.parse(readResult);
-
-		console.table(contactsResult);
-	} catch (error) {}
+		console.table(updatedContacts);
+	} catch (error) {
+		console.log(error.message);
+	}
 }
 
 module.exports = {
